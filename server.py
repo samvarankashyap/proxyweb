@@ -19,24 +19,6 @@ tcpSerPort = 8000
 tcpSerSock.bind(('',tcpSerPort))
 tcpSerSock.listen(5)
 
-
-def read_content():
-    request = b"GET / HTTP/1.1\nHost: www.google.co.in\n\n"
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(("www.google.co.in", 80))
-    s.send(request)
-    result = s.recv(1024)
-    print(result)
-    while (len(result) > 0):
-        select.select([s], [], [])
-        if r:
-	    # ready to receive
-	    result = s.recv(1024)
-	    print result.strip()
-	    if "</html>" in result.strip():
-	        break
-
-
 while True:
     print 'Ready to serve...'
     tcpCliSock, addr = tcpSerSock.accept()
