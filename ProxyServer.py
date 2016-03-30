@@ -18,7 +18,7 @@ LOG_FILE = CWD +"/log.txt"
 # create tcp server socket connection 
 tcpSerSock = socket(AF_INET, SOCK_STREAM)
 # tcp server port number defaulted 
-tcpSerPort = 8000
+tcpSerPort = 8080
 
 # binding the tcp server socket
 tcpSerSock.bind(('',tcpSerPort))
