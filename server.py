@@ -4,6 +4,7 @@ import os
 import sys
 import select
 import datetime 
+import time
 """
 CONFIGURATION PARAMETERS 
 """
@@ -32,7 +33,6 @@ while True:
     tcpCliSock, addr = tcpSerSock.accept()
     # prints the recieved connection address 
     print 'Received a connection from:', addr
-    
     message = tcpCliSock.recv(1024)
     print message
     try:
@@ -62,6 +62,7 @@ while True:
 		tcpCliSock.send("Content-Type:text/html\r\n")
 		# send the cached content
 		tcpCliSock.send(outputdata)
+		ts = time.time()
 		# generate time stamp for logging successfull get request
 		timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 		# opens the logfile descripter in append mode
@@ -82,7 +83,6 @@ while True:
 			print hostn
 			try:
 				# Connect to the socket to port 80
-				# Fill in start.
 				c.connect((hostn, 80))
                                 request = b"GET / HTTP/1.1\nHost: "+hostn+"\n\n"
 				c.send(request)
@@ -120,10 +120,19 @@ while True:
 			except:
 				print "Illegal request" 
 		else:
-		    # HTTP response message for file not found
-		    # Fill in start.
-		    print "filenotfound"
-		    # Fill in end.   
+		    # Send HTTP response message for file not found
+		    tcpCliSock.send('HTTP/1.1 404 Not Found\n')
+		    # get the current time
+		    ts = time.time()
+		    # generate time stamp for logging successfull get request
+		    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+		    # opens the logfile descripter in append mode
+		    log_fd = open(LOG_FILE,"a")
+		    # adds record to the log file ,
+		    log_fd.write(timestamp+"\t"+"HTTP/1.0 404 File Not Found\n")
+		    # closing the logfile descriptor
+		    log_fd.close()
     except:
         pass
-    tcpCliSock.close()
+    finally:
+        tcpCliSock.close()
