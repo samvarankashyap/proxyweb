@@ -57,22 +57,19 @@ while True:
 		outputdata = f.read()
 		# sets the file exists flag to true 
 		fileExist = True
-		pdb.set_trace()
-		# generate time stamp for logging purposes  
+		# ProxyServer finds a cache hit and generates a response message
+		tcpCliSock.send("HTTP/1.0 200 OK\r\n")
+		tcpCliSock.send("Content-Type:text/html\r\n")
+		# send the cached content
+		tcpCliSock.send(outputdata)
+		# generate time stamp for logging successfull get request
 		timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
 		# opens the logfile descripter in append mode
 		log_fd = open(LOG_FILE,"a")
 		# adds record to the log file ,
-                log_fd.write(timestamp+"\t"+"GET HTTP/1.0 200 OK"+"\t"+"Content-Type:text/html\n")
+		log_fd.write(timestamp+"\t"+"GET HTTP/1.0 200 OK"+"\t"+"Content-Type:text/html\n")
 		# closing the logfile descriptor
 		log_fd.close()
-		# ProxyServer finds a cache hit and generates a response message
-		tcpCliSock.send("HTTP/1.0 200 OK\r\n")
-		tcpCliSock.send("Content-Type:text/html\r\n")
-		# Fill in start.
-		#for i in range(0, len(outputdata)):
-	        #    tcpCliSock.send(outputdata[i])
-		tcpCliSock.send(outputdata)
 		# Fill in end.
 		print 'Read from cache'
 	# Error handling for file not found in cache
