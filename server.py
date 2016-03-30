@@ -104,31 +104,27 @@ while True:
 				    tcpCliSock.send(result)
 				    # send the result to client socket
 				    c.send(result)
+				    # write the result to tmp file 
 				    tmpFile.write(result)
+				    # write until the end of the file , usually the webservers html pages end with </html> the loop break at end of file .
 				    if "</html>" in result.strip():
 				        break
+				# closes the temp file descriptor
 				tmpFile.close()
-				# Fill in end.
-				# Create a temporary file on this socket and ask port 80
-				#for the file requested by the client
-				#fileobj = c.makefile('r', 0)
-				#request = b"GET / HTTP/1.1\nHost: "+filename+"\n\n"
-				#fileobj.write("GET "+"http://" + filename + "HTTP/1.0\n\n")
-				#fileobj.write(request)
-				# Read the response into buffer
-				# Fill in start.
-				#buff = fileobj.readlines()
-				# Fill in end.
-				# Create a new file in the cache for the requested file.
-				# Also send the response in the buffer to client socket and the corresponding file in the cache
-				#tmpFile = open(CACHE_DIR+filename,"wb")
-				# Fill in start.
-				#for i in range(0, len(buff)):
-			        #    tmpFile.write(buff[i])
-				#    tcpCliSock.send(buff[i])
-				# Fill in end.
 			except:
-				print "Illegal request" 
+				print "Illegal request"
+				# Send HTTP response message for file not found
+				tcpCliSock.send('HTTP/1.1 404 Not Found\n')
+				# get the current time
+				ts = time.time()
+				# generate time stamp for logging successfull get request
+				timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+				# opens the logfile descripter in append mode
+				log_fd = open(LOG_FILE,"a")
+				# adds record to the log file ,
+				log_fd.write(timestamp+"\t"+"HTTP/1.0 404 File Not Found\n")
+				# closing the logfile descriptor
+				log_fd.close()
 		else:
 		    # Send HTTP response message for file not found
 		    tcpCliSock.send('HTTP/1.1 404 Not Found\n')
@@ -145,4 +141,5 @@ while True:
     except:
         pass
     finally:
+        # closes the tcp cli socket finally 
         tcpCliSock.close()
