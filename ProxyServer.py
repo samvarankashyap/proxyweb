@@ -12,8 +12,7 @@ CWD = os.path.dirname(os.path.abspath(__file__)) # get the current working direc
 CACHE_DIR = CWD +"/cached_files/" # get the path of the cache dir 
 LOG_FILE = CWD +"/log.txt"
 #if len(sys.argv) <= 1:
-#    print  'Usage : "python ProxyServer.py server_ip"\n[server_ip : It is the IP
-#    Address Of Proxy Server'
+#    print  'Usage : "python ProxyServer.py server_ip"\n[server_ip : It is the IP Address Of Proxy Server'
 #    sys.exit(2)
 
 # create tcp server socket connection 
