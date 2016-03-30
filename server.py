@@ -3,45 +3,69 @@ import pdb
 import os
 import sys
 import select
+import datetime 
 """
 CONFIGURATION PARAMETERS 
 """
-CWD = os.path.dirname(os.path.abspath(__file__))
-CACHE_DIR = CWD +"/cached_files/"
+CWD = os.path.dirname(os.path.abspath(__file__)) # get the current working directory of server.py file
+CACHE_DIR = CWD +"/cached_files/" # get the path of the cache dir 
+LOG_FILE = CWD +"/log.txt"
 #if len(sys.argv) <= 1:
 #    print  'Usage : "python ProxyServer.py server_ip"\n[server_ip : It is the IP
 #    Address Of Proxy Server'
 #    sys.exit(2)
 
+# create tcp server socket connection 
 tcpSerSock = socket(AF_INET, SOCK_STREAM)
+# tcp server port number defaulted 
 tcpSerPort = 8000
 
+# binding the tcp server socket
 tcpSerSock.bind(('',tcpSerPort))
+# listens upto maximum 5 clients
 tcpSerSock.listen(5)
 
+# inifinte loop to keep the server up and running
 while True:
     print 'Ready to serve...'
+    # tcp Server socket accepting all the incoming connections retuns client socket and address of the client 
     tcpCliSock, addr = tcpSerSock.accept()
+    # prints the recieved connection address 
     print 'Received a connection from:', addr
+    
     message = tcpCliSock.recv(1024)
     print message
     try:
-        # Extract the filename from the given message
+        # Extract the filename from the given message and print ot 
         print message.split()[1]
         filename = message.split()[1].partition("/")[2]
         print filename
+	# browsers request for some junk request for favicon , the follwing program ignores those requests 
 	if "favicon" in filename:
 	    continue
+        # initialising fileExist flag to False 
 	fileExist = False
+	# assigning the search path of the file
 	filetouse = CACHE_DIR+filename
+	# prints the absolute path of the file to be used 
 	print "This is file to use ",filetouse
-	
+	#nested exception for handling specialised exceptions like file IO excpetions
 	try:
-		# Check wether the file exist in the cache
+		# Check wether the file exist in the cache by opening a file descripter , if not exists it throws a IO exception
 		f = open(filetouse, "rb")
+                # read the file content into a variable 
 		outputdata = f.read()
+		# sets the file exists flag to true 
 		fileExist = True
-		#pdb.set_trace()
+		pdb.set_trace()
+		# generate time stamp for logging purposes  
+		timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+		# opens the logfile descripter in append mode
+		log_fd = open(LOG_FILE,"a")
+		# adds record to the log file ,
+                log_fd.write(timestamp+"\t"+"GET HTTP/1.0 200 OK"+"\t"+"Content-Type:text/html\n")
+		# closing the logfile descriptor
+		log_fd.close()
 		# ProxyServer finds a cache hit and generates a response message
 		tcpCliSock.send("HTTP/1.0 200 OK\r\n")
 		tcpCliSock.send("Content-Type:text/html\r\n")
