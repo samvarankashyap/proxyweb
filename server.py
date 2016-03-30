@@ -84,18 +84,27 @@ while True:
 			try:
 				# Connect to the socket to port 80
 				c.connect((hostn, 80))
+				# create a webserver get request in binary string format
                                 request = b"GET / HTTP/1.1\nHost: "+hostn+"\n\n"
+				# send the request through the client socket
 				c.send(request)
+				# recieve 1024 bytes at a time 
 				result = c.recv(1024)
+				# send the result to the client socket
 				tcpCliSock.send(result)
+				# create a temporary file for the caching the result make sure the mode is in append and binary mode because the data can be in binary too.
 				tmpFile = open(CACHE_DIR+filename,"ab")
+				#  write the result to the file 
 				tmpFile.write(result)
+				# if more contents in the result , loop until result is greater than 0
 				while (len(result) > 0):
+				    # recieve the contents in chunks of 1024 bytes
 				    result = c.recv(1024)
+				    # send the result through the tcp client socket 
 				    tcpCliSock.send(result)
+				    # send the result to client socket
 				    c.send(result)
 				    tmpFile.write(result)
-				    #print result.strip()
 				    if "</html>" in result.strip():
 				        break
 				tmpFile.close()
