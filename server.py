@@ -89,11 +89,12 @@ while True:
 				result = c.recv(1024)
 				tcpCliSock.send(result)
 				tmpFile = open(CACHE_DIR+filename,"ab")
+				tmpFile.write(result)
 				while (len(result) > 0):
-				    tmpFile.write(result)
 				    result = c.recv(1024)
 				    tcpCliSock.send(result)
 				    c.send(result)
+				    tmpFile.write(result)
 				    #print result.strip()
 				    if "</html>" in result.strip():
 				        break
