@@ -37,8 +37,8 @@ def process_client_req(tcpCliSock,addr):
         print filename
 	      # browsers request for some junk request for favicon , the follwing program ignores those requests 
         if "favicon" in filename:
-	          continue
-            # initialising fileExist flag to False 
+            pass
+        # initialising fileExist flag to False 
         fileExist = False
 	      # assigning the search path of the file
         filetouse = CACHE_DIR+filename
@@ -67,7 +67,7 @@ def process_client_req(tcpCliSock,addr):
             # closing the logfile descriptor
             log_fd.close()
             # Fill in end.
-            print 'Read from cache'
+            print 'Read from cache XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
             # Error handling for file not found in cache
         except IOError:
             if fileExist == False:
@@ -107,7 +107,7 @@ def process_client_req(tcpCliSock,addr):
                         # closes the temp file descriptor
                     tmpFile.close()
                 except:
-				            print "Illegal request"
+                    print "Illegal request"
                     # Send HTTP response message for file not found
                     tcpCliSock.send('HTTP/1.1 404 Not Found\n')
                     # get the current time
@@ -122,7 +122,7 @@ def process_client_req(tcpCliSock,addr):
                     log_fd.close()
             else:
                 # Send HTTP response message for file not found
-		            tcpCliSock.send('HTTP/1.1 404 Not Found\n')
+                tcpCliSock.send('HTTP/1.1 404 Not Found\n')
                 # get the current time
                 ts = time.time()
                 # generate time stamp for logging successfull get request
