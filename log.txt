@@ -1,5 +1,9 @@
-2016-03-31 15:18:06	GET / HTTP/1.1 Host: stackoverflow.com	Content-Type:text/html	response_time=0.803196907043	client_address=('10.0.2.2', 59800)
-2016-03-31 15:18:11	HTTP/1.0 404 File Not Found	response_time=5.9318010807	client_address=('10.0.2.2', 59801)
-2016-03-31 15:18:51	GET HTTP/1.0 200 OK	Content-Type:text/html	response_time=-0.00258302688599	client_address=('10.0.2.2', 59830)
-2016-03-31 15:18:51	HTTP/1.0 404 File Not Found	response_time=0.227618932724	client_address=('10.0.2.2', 59831)
-2016-03-31 15:18:53	GET / HTTP/1.1 Host: favicon.ico	Content-Type:text/html	response_time=1.69102787971	client_address=('10.0.2.2', 59832)
+2016-03-31 16:06:48	HTTP/1.0 404 File Not Found	elapsed_time=0.544955968857	client_address=('10.0.2.2', 60462)
+2016-03-31 16:06:48	HTTP/1.0 404 File Not Found	elapsed_time=0.764106988907	client_address=('10.0.2.2', 60464)
+2016-03-31 16:07:07	GET HTTP/1.0 200 OK	Content-Type:text/html	elapsed_time=-0.000691890716553	client_address=('10.0.2.2', 60470)	response_bytes=1651
+2016-03-31 16:07:07	GET HTTP/1.0 200 OK	Content-Type:text/html	elapsed_time=-0.0730209350586	client_address=('10.0.2.2', 60471)	response_bytes=1129
+2016-03-31 16:07:41	HTTP/1.0 404 File Not Found	elapsed_time=1.19945883751	client_address=('10.0.2.2', 60478)
+2016-03-31 16:07:42	HTTP/1.0 404 File Not Found	elapsed_time=1.93134689331	client_address=('10.0.2.2', 60479)
+2016-03-31 16:07:51	GET HTTP/1.0 200 OK	Content-Type:text/html	elapsed_time=-11.2225210667	client_address=('10.0.2.2', 60481)	response_bytes=244061
+2016-03-31 16:07:52	HTTP/1.0 404 File Not Found	elapsed_time=0.196449995041	client_address=('10.0.2.2', 60513)
+2016-03-31 16:07:53	GET HTTP/1.0 200 OK	Content-Type:text/html	elapsed_time=-0.000745058059692	client_address=('10.0.2.2', 60516)	response_bytes=1129
