@@ -2,6 +2,7 @@ from socket import *
 import pdb
 import os
 import sys
+from sys import getsizeof
 import select
 import datetime 
 import time
@@ -12,21 +13,21 @@ CONFIGURATION PARAMETERS
 CWD = os.path.dirname(os.path.abspath(__file__)) # get the current working directory of server.py file
 CACHE_DIR = CWD +"/cached_files/" # get the path of the cache dir 
 LOG_FILE = CWD +"/log.txt"
-
-
-# create tcp server socket connection 
-tcpSerSock = socket(AF_INET, SOCK_STREAM)
-# tcp server port number defaulted 
-tcpSerPort = 8080
-
 try:
     if len(sys.argv) == 3:
         tcpSerPort = int(sys.argv[2])
     else:
+        # tcp server port number defaulted 
         tcpSerPort = 8080
 except:
     print  'Invalid port number'
     sys.exit(0)
+
+# create tcp server socket connection 
+tcpSerSock = socket(AF_INET, SOCK_STREAM)
+
+
+
 
 # binding the tcp server socket
 tcpSerSock.bind(('',tcpSerPort))
@@ -65,6 +66,7 @@ def process_client_req(tcpCliSock,addr):
             tcpCliSock.send("Content-Type:text/html\r\n")
             # send the cached content
             tcpCliSock.send(outputdata)
+            response_bytes = getsizeof(outputdata)
             #calculates the response time 
             resp_time = start_time - time.time()
             ts = time.time()
@@ -73,7 +75,7 @@ def process_client_req(tcpCliSock,addr):
             # opens the logfile descripter in append mode
             log_fd = open(LOG_FILE,"a")
             # adds record to the log file ,
-            log_fd.write(timestamp+"\t"+"GET HTTP/1.0 200 OK"+"\t"+"Content-Type:text/html\t"+"response_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\n")
+            log_fd.write(timestamp+"\t"+"GET HTTP/1.0 200 OK"+"\t"+"Content-Type:text/html\t"+"elapsed_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\t"+"response_bytes="+str(response_bytes)+"\n")
             # closing the logfile descriptor
             log_fd.close()
             # Fill in end.
@@ -97,6 +99,8 @@ def process_client_req(tcpCliSock,addr):
                     result = c.recv(1024)
                     # send the result to the client socket
                     tcpCliSock.send(result)
+                    # empty if file exists just in case
+                    open(CACHE_DIR+filename,"wb").close()
                     # create a temporary file for the caching the result make sure the mode is in append and binary mode because the data can be in binary too.
                     tmpFile = open(CACHE_DIR+filename,"ab")
                     #  write the result to the file 
@@ -115,6 +119,7 @@ def process_client_req(tcpCliSock,addr):
                         if "</html>" in result.strip():
                             break
                         # closes the temp file descriptor
+                    response_bytes = getsizeof(tmpFile.read())
                     tmpFile.close()
                     resp_time = time.time() - start_time
                     ts = time.time()
@@ -123,7 +128,7 @@ def process_client_req(tcpCliSock,addr):
                     # opens the logfile descripter in append mode
                     log_fd = open(LOG_FILE,"a")
                     # adds record to the log file ,
-                    log_fd.write(timestamp+"\t"+"GET / HTTP/1.1 Host: "+hostn+"\t"+"Content-Type:text/html\t"+"response_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\n")
+                    log_fd.write(timestamp+"\t"+"GET / HTTP/1.1 Host: "+hostn+"\t"+"Content-Type:text/html\t"+"elapsedtime="+str(resp_time)+"\t"+"client_address="+str(addr)+"\t"+"response_bytes="+str(response_bytes)+"\n")
                     # closing the logfile descriptor
                     log_fd.close()
                 except:
@@ -138,7 +143,7 @@ def process_client_req(tcpCliSock,addr):
                     # opens the logfile descripter in append mode
                     log_fd = open(LOG_FILE,"a")
                     # adds record to the log file ,
-                    log_fd.write(timestamp+"\t"+"HTTP/1.0 404 File Not Found"+"\t"+"response_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\n")
+                    log_fd.write(timestamp+"\t"+"HTTP/1.0 404 File Not Found"+"\t"+"elapsed_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\n")
                     # closing the logfile descriptor
                     log_fd.close()
             else:
@@ -152,7 +157,7 @@ def process_client_req(tcpCliSock,addr):
                 log_fd = open(LOG_FILE,"a")
                 resp_time = time.time() - start_time
                 # adds record to the log file ,
-                log_fd.write(timestamp+"\t"+"HTTP/1.0 404 File Not Found"+"\t"+"response_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\n")
+                log_fd.write(timestamp+"\t"+"HTTP/1.0 404 File Not Found"+"\t"+"elapsed_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\n")
                 # closing the logfile descriptor
                 log_fd.close()
     except:
@@ -169,5 +174,5 @@ while True:
     tcpCliSock, addr = tcpSerSock.accept()
     tcpCliSock.settimeout(120)
     threading.Thread(target = process_client_req, args = (tcpCliSock,addr)).start()
-    # prints the recieved connection address 
+    # prints the recieved connection address
     
