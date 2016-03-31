@@ -12,14 +12,21 @@ CONFIGURATION PARAMETERS
 CWD = os.path.dirname(os.path.abspath(__file__)) # get the current working directory of server.py file
 CACHE_DIR = CWD +"/cached_files/" # get the path of the cache dir 
 LOG_FILE = CWD +"/log.txt"
-#if len(sys.argv) <= 1:
-#    print  'Usage : "python ProxyServer.py server_ip"\n[server_ip : It is the IP Address Of Proxy Server'
-#    sys.exit(2)
+
 
 # create tcp server socket connection 
 tcpSerSock = socket(AF_INET, SOCK_STREAM)
 # tcp server port number defaulted 
 tcpSerPort = 8080
+
+try:
+    if len(sys.argv) == 3:
+        tcpSerPort = int(sys.argv[2])
+    else:
+        tcpSerPort = 8080
+except:
+    print  'Invalid port number'
+    sys.exit(0)
 
 # binding the tcp server socket
 tcpSerSock.bind(('',tcpSerPort))
@@ -27,6 +34,7 @@ tcpSerSock.bind(('',tcpSerPort))
 tcpSerSock.listen(5)
 
 def process_client_req(tcpCliSock,addr):
+    start_time = time.time()
     print 'Received a connection from:', addr
     message = tcpCliSock.recv(1024)
     print message
@@ -57,13 +65,15 @@ def process_client_req(tcpCliSock,addr):
             tcpCliSock.send("Content-Type:text/html\r\n")
             # send the cached content
             tcpCliSock.send(outputdata)
+            #calculates the response time 
+            resp_time = start_time - time.time()
             ts = time.time()
-            # generate time stamp for logging successfull get request
+            # generate time stamp for logging succetime.time()ssfull get request
             timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
             # opens the logfile descripter in append mode
             log_fd = open(LOG_FILE,"a")
             # adds record to the log file ,
-            log_fd.write(timestamp+"\t"+"GET HTTP/1.0 200 OK"+"\t"+"Content-Type:text/html\n")
+            log_fd.write(timestamp+"\t"+"GET HTTP/1.0 200 OK"+"\t"+"Content-Type:text/html\t"+"response_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\n")
             # closing the logfile descriptor
             log_fd.close()
             # Fill in end.
@@ -106,6 +116,16 @@ def process_client_req(tcpCliSock,addr):
                             break
                         # closes the temp file descriptor
                     tmpFile.close()
+                    resp_time = time.time() - start_time
+                    ts = time.time()
+                    # generate time stamp for logging succetime.time()ssfull get request
+                    timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+                    # opens the logfile descripter in append mode
+                    log_fd = open(LOG_FILE,"a")
+                    # adds record to the log file ,
+                    log_fd.write(timestamp+"\t"+"GET / HTTP/1.1 Host: "+hostn+"\t"+"Content-Type:text/html\t"+"response_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\n")
+                    # closing the logfile descriptor
+                    log_fd.close()
                 except:
                     print "Illegal request"
                     # Send HTTP response message for file not found
@@ -114,10 +134,11 @@ def process_client_req(tcpCliSock,addr):
                     ts = time.time()
                     # generate time stamp for logging successfull get request
                     timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+                    resp_time = time.time() - start_time
                     # opens the logfile descripter in append mode
                     log_fd = open(LOG_FILE,"a")
                     # adds record to the log file ,
-                    log_fd.write(timestamp+"\t"+"HTTP/1.0 404 File Not Found\n")
+                    log_fd.write(timestamp+"\t"+"HTTP/1.0 404 File Not Found"+"\t"+"response_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\n")
                     # closing the logfile descriptor
                     log_fd.close()
             else:
@@ -129,8 +150,9 @@ def process_client_req(tcpCliSock,addr):
                 timestamp = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
                 # opens the logfile descripter in append mode
                 log_fd = open(LOG_FILE,"a")
+                resp_time = time.time() - start_time
                 # adds record to the log file ,
-                log_fd.write(timestamp+"\t"+"HTTP/1.0 404 File Not Found\n")
+                log_fd.write(timestamp+"\t"+"HTTP/1.0 404 File Not Found"+"\t"+"response_time="+str(resp_time)+"\t"+"client_address="+str(addr)+"\n")
                 # closing the logfile descriptor
                 log_fd.close()
     except:
@@ -138,7 +160,6 @@ def process_client_req(tcpCliSock,addr):
     finally:
         # closes the tcp cli socket finally 
         tcpCliSock.close()
-
 
 # inifinte loop to keep the server up and running
 #ref http://stackoverflow.com/questions/23828264/how-to-make-a-simple-multithreaded-socket-server-in-python-that-remembers-client
