@@ -1,0 +1,13 @@
+HTTP/1.1 200 OK
+Server: nginx
+Date: Thu, 31 Mar 2016 19:18:53 GMT
+Content-Type: text/html; charset=utf-8
+Transfer-Encoding: chunked
+Connection: close
+Expires: Thu, 31 Mar 2016 19:28:53 GMT
+Cache-Control: max-age=600
+
+356
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"><html><head><meta http-equiv="refresh" content="0;url=http://airtelforum.com/main?ParticipantID=kk7rp2jf3dkl4v52nla5u7676ej8r6uf&FailedURI=http%3A%2F%2Ffavicon.ico%2F&FailureMode=1&Implementation=3&AddInType=4&Version=pywr1.0&ClientLocation=in"/><script type="text/javascript">url="http://airtelforum.com/main?ParticipantID=kk7rp2jf3dkl4v52nla5u7676ej8r6uf&FailedURI=http%3A%2F%2Ffavicon.ico%2F&FailureMode=1&Implementation=3&AddInType=4&Version=pywr1.0&ClientLocation=in";if(top.location!=location){var w=window,d=document,e=d.documentElement,b=d.body,x=w.innerWidth||e.clientWidth||b.clientWidth,y=w.innerHeight||e.clientHeight||b.clientHeight;url+="&w="+x+"&h="+y;}window.location.replace(url);</script></head><body></body></html>
+0
+
