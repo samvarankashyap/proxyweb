@@ -8,6 +8,13 @@ import datetime
 import time
 import threading
 """
+multiple code references 
+http://stackoverflow.com/questions/23828264/how-to-make-a-simple-multithreaded-socket-server-in-python-that-remembers-client
+http://stackoverflow.com/questions/1557571/how-to-get-time-of-a-python-program-execution
+http://stackoverflow.com/questions/14372006/variables-memory-size-in-python
+"""
+
+"""
 CONFIGURATION PARAMETERS 
 """
 CWD = os.path.dirname(os.path.abspath(__file__)) # get the current working directory of server.py file
