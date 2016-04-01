@@ -20,8 +20,8 @@ got to localhost:<portnumber>/url
 ##File structure : 
 CSE5344_project1_1001142545/
 +-- cached_files
-¦   +-- favicon.ico
-¦   +-- www.stackoverflow.com
+Â¦Â Â  +-- favicon.ico
+Â¦Â Â  +-- www.stackoverflow.com
 +-- client.py
 +-- LICENSE
 +-- log.txt
@@ -45,3 +45,5 @@ sceenshots --> consists of the working program screens
 References : 
 http://stackoverflow.com/questions/23828264/how-to-make-a-simple-multithreaded-socket-server-in-python-that-remembers-client
 http://stackoverflow.com/questions/1557571/how-to-get-time-of-a-python-program-execution
+http://stackoverflow.com/questions/14372006/variables-memory-size-in-python
+
